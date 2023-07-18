@@ -1,11 +1,11 @@
 type SentryIssue = Record<string, any>;
 
 export function getEvent(issue: SentryIssue) {
-  return issue?.event ?? issue?.data?.issue ?? issue;
+  return issue?.data?.event ?? issue?.data?.event ?? issue;
 }
 
 export function getProject(issue: SentryIssue) {
-  return issue?.project?.project_name ?? getEvent(issue)?.project?.name;
+  return getEvent(issue)?.project?.project_name ?? getEvent(issue)?.project?.name;
 }
 
 export function getPlatform(issue: SentryIssue) {
@@ -36,7 +36,7 @@ export function getExtras(issue: SentryIssue) {
 }
 
 export function getLink(issue: SentryIssue) {
-  return issue?.url ?? "https://sentry.io";
+  return getEvent(issue)?.web_url ?? "https://sentry.io";
 }
 
 export function getTags(issue: SentryIssue) {
@@ -128,5 +128,5 @@ export function getErrorCodeSnippet(issue: SentryIssue) {
 }
 
 export function getMessage(issue: SentryIssue) {
-  return issue?.message;
+  return getEvent(issue)?.message;
 }

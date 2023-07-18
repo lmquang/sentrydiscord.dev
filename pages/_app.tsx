@@ -4,6 +4,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import * as Fathom from "fathom-client";
 import "tailwindcss/tailwind.css";
+import 'dotenv/config'
+require('dotenv').config()
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

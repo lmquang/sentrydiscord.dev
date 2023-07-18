@@ -13,14 +13,6 @@ function cap(str: string, length: number) {
 export default function createMessage(event) {
   const embed = new EmbedBuilder()
     .setColor(getColor(parser.getLevel(event)))
-    .setAuthor({
-      name: event.project_name,
-      iconURL: "https://sentrydiscord.dev/icons/sentry.png",
-    })
-    .setFooter({
-      name: "Please consider sponsoring us!",
-      iconURL: "https://sentrydiscord.dev/sponsor.png",
-    })
     .setTimestamp(parser.getTime(event))
 
   const projectName = parser.getProject(event);

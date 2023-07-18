@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import Question, { QuestionExternalLink } from '../components/Questions';
 import Stat from '../components/Stat';
 import DonationBanner from '../components/DonationBanner';
+import 'dotenv/config';
+require('dotenv').config();
 
 function ExternalLink({
   href,

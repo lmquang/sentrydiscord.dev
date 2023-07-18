@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import DonationBanner from '../components/DonationBanner';
 import Spinner from '../components/Spinner';
 import Copy from '../components/Copy';
+import 'dotenv/config';
+require('dotenv').config();
 
 function ExternalLink({
   href,
@@ -30,7 +32,9 @@ export default function Create() {
     setValue(event.currentTarget.value);
   };
 
-  const getWebhookURL = () => `https://sentrydiscord.dev/api/webhooks/${key}`;
+  const BASE_URL = process.env.BASE_URL || 'https://sdw.daf.ug';
+
+  const getWebhookURL = () => `${BASE_URL}/api/webhooks/${key}`;
 
   const onClick = async (event) => {
     event.preventDefault();
