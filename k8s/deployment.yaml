@@ -1,0 +1,86 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentry-discord
+  namespace: misc
+  labels:
+    app: sentry-discord
+spec:
+  selector:
+    matchLabels:
+      app: sentry-discord
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sentry-discord
+    spec:
+      containers:
+      - name: sdw
+        image: gcr.io/df-infrastructure/swd
+        envFrom:
+        - secretRef:
+            name: sentry-discord
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+        ports:
+        - containerPort: 3000
+          name: http
+      restartPolicy: Always
+      nodeSelector:
+        nodepool: development
+      tolerations:
+      - key: nodepool
+        operator: Equal
+        value: development
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentry-discord
+  namespace: misc
+spec:
+  selector:
+    app: sentry-discord
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sentry-discord
+  namespace: misc
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+    - hosts:
+        - sdw.daf.ug
+      secretName: sentry-discord-tls
+  rules:
+    - host: sdw.daf.ug
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: sentry-discord
+                port:
+                  name: http
