@@ -29,8 +29,12 @@ export function getContexts(issue: SentryIssue) {
 export function getExtras(issue: SentryIssue) {
   const extras = getEvent(issue)?.extra ?? {};
   const values = Object.entries(extras).map(
-    ([key, value]) => `${key}: ${value}`
-  );
+    ([key, value]) => {
+      if (typeof value === "object") {
+        value = JSON.stringify(value);
+      }
+      return `${key}: ${value}`
+    });
 
   return values ?? [];
 }
@@ -98,8 +102,7 @@ export function getErrorLocation(issue: SentryIssue, maxLines = Infinity) {
 
   let files = locations?.map(
     (location) =>
-      `${location?.filename}, ${location?.lineno ?? "?"}:${
-        location?.colno ?? "?"
+      `${location?.filename}, ${location?.lineno ?? "?"}:${location?.colno ?? "?"
       }`
   );
 
@@ -122,9 +125,8 @@ export function getErrorCodeSnippet(issue: SentryIssue) {
 
   // The spaces below are intentional - they help align the code
   // aorund the additional `>` marker
-  return ` ${location.pre_context?.join("\n ") ?? ""}\n>${
-    location.context_line
-  }\n${location.post_context?.join("\n") ?? ""}`;
+  return ` ${location.pre_context?.join("\n ") ?? ""}\n>${location.context_line
+    }\n${location.post_context?.join("\n") ?? ""}`;
 }
 
 export function getMessage(issue: SentryIssue) {

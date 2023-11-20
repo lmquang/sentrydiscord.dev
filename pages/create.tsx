@@ -40,7 +40,7 @@ export default function Create() {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
-    Fathom.trackGoal('4DROBFHL', 1);
+    // Fathom.trackGoal('', 1);
 
     const response = await fetch('/api/create', {
       method: 'POST',

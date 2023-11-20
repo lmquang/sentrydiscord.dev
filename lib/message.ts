@@ -31,29 +31,8 @@ export default function createMessage(event) {
     embed.setURL(parser.getLink(event));
   }
 
-  const fileLocation = parser.getFileLocation(event);
-  const snippet = cap(parser.getErrorCodeSnippet(event), 3900);
-
-  if (snippet) {
-    embed.setDescription(
-      `${fileLocation ? `\`📄 ${fileLocation.slice(-95)}\`\n` : ""}\`\`\`${
-        parser.getLanguage(event) ?? parser.getPlatform(event)
-      }\n${snippet}
-      \`\`\``
-    );
-  } else {
-    embed.setDescription("Unable to generate code snippet.");
-  }
-
   const fields: APIEmbedField[] = [];
 
-  const location = parser.getErrorLocation(event, 7);
-  if (location?.length > 0) {
-    fields.push({
-      name: "Stack",
-      value: `\`\`\`${cap(location.join("\n"), 1000)}\n\`\`\``,
-    });
-  }
 
   const user = parser.getUser(event);
   if (user?.username) {
@@ -74,6 +53,30 @@ export default function createMessage(event) {
       ),
       inline: true,
     });
+
+    if (tags?.["show_code_snippet"]) {
+      const fileLocation = parser.getFileLocation(event);
+
+      const snippet = cap(parser.getErrorCodeSnippet(event), 3900);
+
+      if (snippet) {
+        embed.setDescription(
+          `${fileLocation ? `\`📄 ${fileLocation.slice(-95)}\`\n` : ""}\`\`\`${parser.getLanguage(event) ?? parser.getPlatform(event)
+          }\n${snippet}
+      \`\`\``
+        );
+      } else {
+        embed.setDescription("Unable to generate code snippet.");
+      }
+
+      const location = parser.getErrorLocation(event, 7);
+      if (location?.length > 0) {
+        fields.push({
+          name: "Stack",
+          value: `\`\`\`${cap(location.join("\n"), 1000)}\n\`\`\``,
+        });
+      }
+    }
   }
 
   const extras = parser.getExtras(event);

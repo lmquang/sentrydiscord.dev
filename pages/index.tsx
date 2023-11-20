@@ -24,7 +24,7 @@ function ExternalLink({
 
 export default function Home({ events, webhooks }) {
   const onStartClick = () => {
-    Fathom.trackGoal('JS44EPR1', 1);
+    // Fathom.trackGoal('', 1);
   };
 
   return (

@@ -2,7 +2,7 @@ import * as Fathom from 'fathom-client';
 
 export default function DonationBanner() {
   const onDonationClick = () => {
-    Fathom.trackGoal('PNH5FP3Q');
+    // Fathom.trackGoal('');
   };
 
   return (
